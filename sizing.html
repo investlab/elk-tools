@@ -86,76 +86,77 @@
         <div id="configInfo" class="config-info"></div>
     </div>
     <script>
-        function calculateResources() {
-            const dataSizeInput = document.getElementById("dataSize");
-            const dataSize = parseFloat(dataSizeInput.value);
+function calculateResources() {
+    const dataSizeInput = document.getElementById("dataSize");
+    const dataSize = parseFloat(dataSizeInput.value);
 
-            if (isNaN(dataSize) || dataSize <= 0) {
-                alert("Please enter a valid data size greater than 0.");
-                return;
-            }
+    if (isNaN(dataSize) || dataSize <= 0) {
+        alert("Please enter a valid data size greater than 0.");
+        return;
+    }
 
-            // Calculate RAM, CPU, Disk based on the given ratios
-            const ramPerGBData = 1 / 16;
-            const cpuPerGBRam = 1 / 4;
-            const diskMultiplier = 1.3;
+    // Calculate RAM, CPU, Disk based on the given ratios
+    const ramPerGBData = 1 / 16;
+    const cpuPerGBRam = 1 / 4;
+    const diskMultiplier = 1.3;
 
-            const ramSize = dataSize * ramPerGBData;
-            const cpuCores = ramSize * cpuPerGBRam;
-            const diskSize = dataSize * diskMultiplier;
+    const ramSize = Math.ceil(dataSize * ramPerGBData / 2) * 2; // làm tròn đến số chẵn
+    const cpuCores = Math.ceil(ramSize * cpuPerGBRam / 2) * 2; // làm tròn đến số chẵn
+    const diskSize = Math.ceil(dataSize * diskMultiplier / 2) * 2; // làm tròn đến số chẵn
 
-            // Calculate the number of nodes needed
-            const nodesConfig = {
-                cpuCoresPerNode: 4,
-                ramSizePerNode: 16,
-                diskSizePerNode: 300
-            };
+    // Calculate the number of nodes needed
+    const nodesConfig = {
+        cpuCoresPerNode: 4,
+        ramSizePerNode: 16,
+        diskSizePerNode: 300
+    };
 
-            const numNodes = Math.ceil(diskSize / nodesConfig.diskSizePerNode);
+    const numNodes = Math.ceil(diskSize / nodesConfig.diskSizePerNode);
 
-            // Display the result in a table
-            const resultTable = document.getElementById("resultTable");
-            resultTable.innerHTML = `
-                <tr>
-                    <th>Resource</th>
-                    <th>Total</th>
-                </tr>
-                <tr>
-                    <td>Total RAM (GB)</td>
-                    <td>${Math.round(ramSize)}</td>
-                </tr>
-                <tr>
-                    <td>Total CPU (Core)</td>
-                    <td>${Math.round(cpuCores)}</td>
-                </tr>
-                <tr>
-                    <td>Total Disk Size (GB)</td>
-                    <td>${Math.round(diskSize)}</td>
-                </tr>
-                <tr>
-                    <td>Estimated Number of Nodes</td>
-                    <td>${numNodes}</td>
-                </tr>
-            `;
-
-// Display node configuration information
-const configInfo = document.getElementById("configInfo");
-configInfo.innerHTML = `
-    <p>Hardware per Node:</p>
-    <table>
+    // Display the result in a table
+    const resultTable = document.getElementById("resultTable");
+    resultTable.innerHTML = `
         <tr>
-            <th>CPU (CORE)</th>
-            <th>RAM(GB)</th>
-            <th>DISK(GB)</th>
+            <th>Resource</th>
+            <th>Total</th>
         </tr>
         <tr>
-            <td>${nodesConfig.cpuCoresPerNode}</td>
-            <td>${nodesConfig.ramSizePerNode}</td>
-            <td>${nodesConfig.diskSizePerNode}</td>
+            <td>Total RAM (GB)</td>
+            <td>${ramSize}</td>
         </tr>
-    </table>
-`;
-        }
+        <tr>
+            <td>Total CPU (Core)</td>
+            <td>${cpuCores}</td>
+        </tr>
+        <tr>
+            <td>Total Disk Size (GB)</td>
+            <td>${diskSize}</td>
+        </tr>
+        <tr>
+            <td>Estimated Number of Nodes</td>
+            <td>${numNodes}</td>
+        </tr>
+    `;
+
+    // Display node configuration information
+    const configInfo = document.getElementById("configInfo");
+    configInfo.innerHTML = `
+        <p>Hardware per Node:</p>
+        <table>
+            <tr>
+                <th>CPU (CORE)</th>
+                <th>RAM(GB)</th>
+                <th>DISK(GB)</th>
+            </tr>
+            <tr>
+                <td>${nodesConfig.cpuCoresPerNode}</td>
+                <td>${nodesConfig.ramSizePerNode}</td>
+                <td>${nodesConfig.diskSizePerNode}</td>
+            </tr>
+        </table>
+    `;
+}
+
     </script>
 </body>
 </html>
