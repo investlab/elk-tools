@@ -80,7 +80,7 @@
     <div class="container">
         <h2>Elastic Sizing</h2>
         <label for="dataSize">Enter Data Size (GB):</label>
-        <input type="number" id="dataSize" min="1" placeholder="Enter data size" oninput="calculateResources()">
+        <input type="number" id="dataSize" min="1" placeholder="Enter Data Size (GB)" oninput="calculateResources(1)">
         <div id="result"></div>
         <table id="resultTable"></table>
         <div id="configInfo" class="config-info"></div>
@@ -90,7 +90,7 @@ function calculateResources() {
     const dataSizeInput = document.getElementById("dataSize");
     const dataSize = parseFloat(dataSizeInput.value);
 
-    if (isNaN(dataSize) || dataSize <= 0) {
+    if (isNaN(dataSize) || dataSize < 0) {
         alert("Please enter a valid data size greater than 0.");
         return;
     }
